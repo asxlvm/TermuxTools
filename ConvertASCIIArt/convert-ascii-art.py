@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from os import system
 import argparse
 
@@ -13,9 +14,9 @@ class Colors:
     CYAN = [32,38,45,51,87,123]
 
 parser = argparse.ArgumentParser(description="Convert a basic ASCII art to a bash script with colors included.")
-parser.add_argument('--ascii', metavar="-a", required=True, type=str, help="The ASCII art you want to convert. So that you can assure it works, surround the ASCII art with double quotes like this: \"YOUR ASCII ART\"")
-parser.add_argument('--padding', metavar="-p", default=0, type=int, help="How much pixels you wanna go from, from the left.")
-parser.add_argument('--color', metavar="-c", default="RED", type=str, help="The color gradient you wanna use (PURPLE, PINK, BLUE, GREEN, RED, YELLOW, ORANGE, GRAY, CYAN)")
+parser.add_argument('--ascii', '-a', required=True, type=str, help="The ASCII art you want to convert. So that you can assure it works, surround the ASCII art with double quotes like this: \"YOUR ASCII ART\"")
+parser.add_argument('--padding', '-p', default=0, type=int, help="The amount of pixels you wanna move your ASCII art by to the left.")
+parser.add_argument('--color', '-c', default="RED", type=str, help="The color gradient you wanna use (PURPLE, PINK, BLUE, GREEN, RED, YELLOW, ORANGE, GRAY, CYAN)")
 args = parser.parse_args()
 padding = args.padding * " "
 asciiart = args.ascii
