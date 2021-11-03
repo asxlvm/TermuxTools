@@ -1,6 +1,9 @@
 #!/usr/bin/python
 from os import system
 import argparse
+import sys
+
+TO_ESCAPE = ["!",'"',"#","$","&","'","(",")","*",";","<",">","?",r"\\","[","\\","`","{","|","~",r"\t",r"\n"]
 
 class Colors:
     PURPLE = [91,92,129,135,141]
@@ -14,12 +17,29 @@ class Colors:
     CYAN = [32,38,45,51,87,123]
 
 parser = argparse.ArgumentParser(description="Convert a basic ASCII art to a bash script with colors included.")
-parser.add_argument('--ascii', '-a', required=True, type=str, help="The ASCII art you want to convert. So that you can assure it works, surround the ASCII art with double quotes like this: \"YOUR ASCII ART\"")
+parser.add_argument('--ascii', '-a', default=None, type=str, help="The ASCII art you want to convert. So that you can assure it works, surround the ASCII art with double quotes like this: \"YOUR ASCII ART\"")
 parser.add_argument('--padding', '-p', default=0, type=int, help="The amount of pixels you wanna move your ASCII art by to the left.")
 parser.add_argument('--color', '-c', default="RED", type=str, help="The color gradient you wanna use (PURPLE, PINK, BLUE, GREEN, RED, YELLOW, ORANGE, GRAY, CYAN)")
 args = parser.parse_args()
 padding = args.padding * " "
-asciiart = args.ascii
+
+def convert(txt):
+    result = ""
+    for char in txt:
+        if char in TO_ESCAPE:
+            result += f"\"\{char}\""
+        else:
+            result += char
+    return result
+
+if args.ascii == None:
+    asciiart = sys.stdin.read()
+    if asciiart in [None, ""]:
+        parser.error("ascii needs to have a value, either passed in or piped.")
+    else:
+        asciiart = convert(asciiart)
+else:
+    asciiart = args.ascii
 color_iter = getattr(Colors, args.color.upper())
 
 def convert():
@@ -42,5 +62,5 @@ def convert():
     return complete_code
 
 converted = convert()
-print(converted, "\n\n\n")
+print(f"\33[7m{converted}\33[0m", "\n\n\n")
 system(converted)
